@@ -1,0 +1,1 @@
+# confignParámetros y rutas.n

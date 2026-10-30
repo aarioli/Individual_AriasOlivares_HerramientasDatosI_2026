@@ -1,4 +1,11 @@
-.Rproj.user
+# R / RStudio
 .Rhistory
 .RData
-.Ruserdata
+.Rproj.user/
+
+# Datos (ignorar todo Excel MENOS el nuestro)
+*.xlsx
+!data/Datos crudos/Datos crudos.xlsx
+
+# Resultados pesados
+res/*.pdf
