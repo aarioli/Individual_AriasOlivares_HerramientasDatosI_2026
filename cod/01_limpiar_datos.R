@@ -3,7 +3,7 @@
 # Propósito: leer el Excel crudo, homologar variables, aplicar
 #            correcciones documentadas, derivar variables y
 #            exportar base tidy a CSV.
-# Insumos: data/Datos crudos.xlsx
+# Insumos: data/Datos crudos/Datos crudos.xlsx
 # Salidas: data/processed/base_tidy.csv
 # ---------------------------------------------------------------
 
