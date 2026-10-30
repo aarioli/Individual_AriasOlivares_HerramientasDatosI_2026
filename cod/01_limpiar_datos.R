@@ -37,7 +37,6 @@ datos.limpios <- datos.consolidados %>%
   mutate(
     intensidad.agua = water_million_m3 / electricity_twh,
     brecha.scope2 = scope2_location_mt - scope2_market_mt,
-    ratio.renovables = scope2_market_mt / scope2_location_mt,
     emisiones.totales = scope1_mt + scope2_market_mt + scope3_mt,
     pct.scope3 = (scope3_mt / emisiones.totales) * 100,
     intensidad.operativa = (scope1_mt + scope2_market_mt) / electricity_twh,
