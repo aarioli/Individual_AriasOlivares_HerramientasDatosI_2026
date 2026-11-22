@@ -13,7 +13,7 @@ library(tidyr)
 library(purrr)    
 library(readr)    
 
-archivo.excel <- "data/Datos crudos/Datos crudos.xlsx"
+archivo.excel <- "data/Datos consolidados/Datos consolidados.xlsx"
 archivo.limpio <- "data/processed/base_tidy.csv"
 
 datos.consolidados <- read_excel(
