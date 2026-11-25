@@ -197,7 +197,13 @@ World Resources Institute & World Business Council for Sustainable Development. 
 
 # Anexos {.unnumbered}
 
-## Anexo A. Serie histórica consolidada (2020–2025) {.unnumbered}
+## Anexo A. Enlace al repositorio de github {.unnumbered}
+
+https://github.com/aarioli/Individual_AriasOlivares_HerramientasDatosI_2026.git
+
+\
+
+## Anexo B. Serie histórica consolidada (2020–2025) {.unnumbered}
 
 La @tbl-anexo-base presenta el conjunto de datos estandarizado (`base_tidy.csv`) utilizado para el cálculo de indicadores y visualizaciones del reporte.
 
@@ -217,7 +223,9 @@ datos.tidy |>
   )
 ```
 
-## Anexo B. Contraste de escala eléctrica frente a Costa Rica {.unnumbered}
+\
+
+## Anexo C. Contraste de escala eléctrica frente a Costa Rica {.unnumbered}
 
 Para dimensionar la magnitud física de la demanda energética de los centros de datos analizados, la @tbl-anexo-cr contrasta el consumo eléctrico anual de Google, Microsoft y Meta frente a la demanda eléctrica nacional acumulada del Sistema Eléctrico Nacional (SEN) de Costa Rica en 2025 ($13.00\text{ TWh}$, equivalente a $12\,995\,443.5\text{ MWh}$).
 
