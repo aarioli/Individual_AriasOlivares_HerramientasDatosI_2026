@@ -9,3 +9,5 @@
 
 # Resultados pesados
 res/*.pdf
+.RDataTmp*
+.quarto/
