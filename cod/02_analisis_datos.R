@@ -225,7 +225,7 @@ grafico.scope2.dumbbell <- ggplot(datos.obj2.reciente) +
   scale_x_continuous(expand = expansion(mult = c(0.12, 0.15))) +
   labs(
     title = "Contratos limpios abren una brecha de hasta 12 Mt frente a la red física",
-    subtitle = "Scope 2: Contable (morado) vs. Red física (naranja) en el último año reportado",
+    subtitle = "Scope 2: Contable (celeste) vs. Red física (morado) en el último año reportado",
     x = "Emisiones de Alcance 2 (MtCO2e)",
     y = NULL,
     caption = "Fuente: Reportes de sostenibilidad bajo GHG Protocol Scope 2 Guidance."
