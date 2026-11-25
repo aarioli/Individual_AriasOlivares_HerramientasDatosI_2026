@@ -1,0 +1,240 @@
+---
+lang: es
+number-sections: true
+format:
+  typst:
+    fontsize: 12pt
+    papersize: us-letter
+    margin:
+      x: 2.5cm
+      y: 2.3cm
+    include-before-body:
+      - text: |
+          #set par(first-line-indent: (amount: 1.25cm, all: true), justify: true, leading: 1.15em, spacing: 1.15em)
+          #show align.where(alignment: center): set text(size: 10pt)
+          #show align.where(alignment: center): set block(spacing: 0.5em)
+          #show heading.where(level: 1): set text(size: 12pt)
+          #show heading.where(level: 1): set block(above: 1.1em, below: 0.7em)
+          #show heading.where(level: 2): set text(size: 12pt)
+          #show heading.where(level: 2): set block(above: 0.9em, below: 0.5em)
+          #show figure.caption: set text(size: 9.5pt)
+          #show table: set text(size: 10pt)
+          #show table.cell: set par(justify: false)
+          #set table(fill: (_, y) => if calc.odd(y) { luma(245) })
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+```{=typst}
+#align(center)[
+  #text(14pt, weight: "bold")[La huella ecológica de la nube: Demanda de Recursos y Huella de Carbono en Google, Meta y Microsoft (2020–2025)]
+  
+  #v(0.4em)
+  #text(11.5pt, weight: "bold")[Universidad de Costa Rica · Herramientas de Datos I · II ciclo 2026]
+  
+  #v(0.4em)
+  #text(11pt)[Allison Arias Olivares (C4C751)]
+  
+  #v(0.2em)
+  #text(10.5pt)[23 de noviembre de 2026]
+]
+#v(0.8em)
+```
+
+```{r}
+#| include: false
+
+source("02_analisis_datos.R")
+```
+
+
+# Introducción
+
+El acelerado crecimiento de los servicios en la nube y de la inteligencia artificial ha hecho que las instalaciones digitales demanden enormes cantidades de recursos naturales. Estos centros requieren suministro eléctrico ininterrumpido para operar sus computadoras y enormes volúmenes de agua dulce para mantenerlas frescas. Si bien varias empresas tecnológicas han impulsado medidas sostenibles, como el uso de electricidad renovable y proyectos ambientales, persiste una brecha notable entre sus informes oficiales y la realidad.
+
+Gran parte de esta neutralidad se sustenta en acuerdos comerciales de mercado (*market-based*)(es decir, en la compra de certificados financieros de energía renovable), los cuales no reflejan la demanda física real que los centros ejercen sobre las redes eléctricas convencionales que queman combustibles fósiles (*location-based*), ni abarcan las emisiones emitidas en la manufactura de hardware y la construcción de la infraestructura (*Scope 3*). Este estudio analiza con cifras reales si las medidas ecológicas de estas compañías avanzan al mismo ritmo que la expansión física de sus centros, o si son únicamente compensaciones contables.
+
+Para ello, se integraron los reportes anuales de sostenibilidad y las hojas de desempeño ambiental (Environmental Data Sheets) de Alphabet (Google), Meta Platforms y Microsoft Corporation (2020–2025). Los datos abarcan el consumo eléctrico bruto (TWh), el consumo de agua en millones de metros cúbicos (m³) y los inventarios de gases de efecto invernadero (Alcances 1, 2 y 3).
+
+
+# Objetivo
+
+Analizar la evolución 2020–2025 del consumo eléctrico, el consumo de agua y las emisiones de GEI de Google, Meta y Microsoft, en relación con sus indicadores de contratación de electricidad renovable, para explorar si sus estrategias de sostenibilidad acompañan el crecimiento de su infraestructura tecnológica.
+
+
+# Metodología
+
+Los datos se obtuvieron de los reportes de sostenibilidad de Google, Meta y Microsoft publicados para los años 2025 y 2026, y se consolidaron en Datos consolidados.xlsx, tratando las celdas con NA (como el año 2025 de Meta y registros puntuales de Microsoft) como valores ausentes.
+
+Luego, se generó base_tidy.csv estandarizando las variables: el consumo eléctrico en teravatios-hora ($\text{TWh}$, donde $1\text{ TWh} = 10^6\text{ MWh}$), las emisiones de Alcances 1, 2 (location-based y market-based) y 3 en millones de toneladas métricas de $\text{CO}_2$ equivalente ($\text{MtCO}_2\text{e}$), y el consumo neto de agua dulce (Water consumption) en millones de $\text{m}^3$ (multiplicando los millones de galones de Google por $0.00378541$ y dividiendo los megalitros de Meta entre $1\,000$).
+
+Con dplyr se calcularon las métricas analíticas exportadas a base_tidy.csv, y mediante ggplot2 se desarrolló la visualización bajo principios de narrativa visual (storytelling):
+
+En primer lugar, se obtuvo la intensidad hídrica dividiendo el agua consumida (millones de $\text{m}^3$) entre la electricidad ($\text{TWh}$). Asimismo, la variación entre el primer y último registro válido se calculó como la diferencia entre el valor final y el valor base de 2020 dividida entre dicho valor base, multiplicada por 100. Estas series temporales se representaron con gráficos de líneas continuas.
+   
+En segundo lugar, se evaluó el impacto de los certificados de energía limpia restando las emisiones market-based de las location-based y calculando su porcentaje de reducción. Esta brecha se ilustró mediante un gráfico tipo dumbbell ordenado por huella física y una tabla de balance neto en $\text{MtCO}_2\text{e}$.
+   
+Finalmente, se sumaron los Alcances 1, 2 (market-based) y 3 para hallar las emisiones totales y el peso porcentual del Alcance 3. También se dividieron las emisiones operativas (Alcances 1 y 2) y las totales entre el consumo eléctrico ($\text{TWh}$) para medir la intensidad de carbono, resumiendo su evolución desde 2020 en una tabla.
+
+\
+
+# Resultados
+
+A continuación, se presentan los hallazgos cuantitativos derivados del análisis comparativo entre Google, Meta y Microsoft durante el periodo 2020–2025. Los resultados se organizan en tres ejes: la expansión de la demanda eléctrica e hídrica, la brecha contable de emisiones de Alcance 2 y el peso estructural de la cadena de valor en la intensidad de carbono.
+
+## Expansion del consumo eléctrico y demanda hídrica
+
+La rápida construcción de instalaciones necesarias para el funcionamiento de los servicios en la nube y el desarrollo de la inteligencia artificial ha generado un incremento sostenido en la demanda de insumos y recursos naturales. Como se observa en la @fig-electricidad y la @fig-agua, las tres corporaciones presentan trayectorias ascendentes con una marcada inflexión a partir de 2022–2023.
+
+```{r}
+#| label: fig-electricidad
+#| fig-cap: "Evolución del consumo eléctrico anual en centros de datos (TWh, 2020–2025). Fuente: Elaboración propia con datos de Alphabet, Meta y Microsoft."
+#| fig-width: 6.5
+#| fig-height: 2.5
+#| out-width: "82%"
+
+consumo.electrico +
+  theme(axis.title.y = element_text(size = 8.5))
+```
+
+```{r}
+#| label: fig-agua
+#| fig-cap: "Evolución del consumo neto de agua dulce para refrigeración (millones de m³, 2020–2025). Fuente: Elaboración propia con datos de Alphabet, Meta y Microsoft."
+#| fig-width: 6.5
+#| fig-height: 2.5
+#| out-width: "82%"
+
+consumo.agua+
+  theme(axis.title.y = element_text(size = 8.5))
+```
+
+Es notable que Google encabeza en ambos consumos, de hecho, muestra un crecimiento casi idéntico en ambos,  un +184.2% en electricidad (de $15.50$ a $44.05\text{ TWh}$) y un +189.9% en consumo hídrico (de $14.19$ a $41.14\text{ millones de m}^3$), lo cual revela la dependencia directa del aumento de sus servidores que conlleva a más sistemas de enfriamiento.
+
+Para cuantificar con precisión la magnitud de esta expansión entre el año base 2020 y el cierre del periodo auditado, la @tbl-crecimiento sintetiza los volúmenes iniciales, finales y las tasas de crecimiento acumulado ($\%\Delta$) por empresa.
+
+```{r}
+#| label: tbl-crecimiento
+#| tbl-cap: "Variación acumulada del consumo eléctrico (TWh) y consumo hídrico (millones de m³), 2020–2025. Fuente: Elaboración propia."
+
+knitr::kable(
+  tabla.obj1,
+  digits = 2,
+  col.names = c("Empresa", "Elec. 2020", "Elec. Final", "Δ Elec. (%)", "Agua 2020", "Agua Final", "Δ Agua (%)"),
+  align = c("l", "c", "c", "c", "c", "c", "c")
+)
+```
+
+En contraste con el crecimiento simétrico de Google, Microsoft registra la mayor tasa relativa de expansión eléctrica con un +243.8% (de $10.77$ a $37.03\text{ TWh}$), mientras que su consumo de agua creció a menos de la mitad de ese ritmo ($+104.8\%$),cerrando en $8.17\text{ millones de m}^3$ (un volumen cinco veces menor que el registrado por Google en 2025 ($41.14\text{ millones de m}^3$)) . Por su parte, Meta aumentó su demanda eléctrica un +157.0% hasta 2024 (de $7.17$ a $18.42\text{ TWh}$) frente a un incremento hídrico de apenas +41.8%.
+
+\
+
+## Brecha de mitigación contable en el Alcance 2
+
+A pesar de declarar metas de abastecimiento renovable cercanas o iguales al $100\%$, el contraste entre las emisiones físicas de la red eléctrica (*location-based*) y las emisiones reportadas tras aplicar certificados financieros y contratos PPA (Power Purchase Agreement o acuerdo de compraventa de energía) (*market-based*) revela una brecha estructural significante (@fig-dumbbell y @tbl-brecha), la cual no es reportada directamente en los informes de sostenibilidad de las empresas.
+
+```{r}
+#| label: fig-dumbbell
+#| fig-cap: "Brecha entre emisiones físicas de red (location-based) y emisiones contables de mercado (market-based) en MtCO₂e. Fuente: Elaboración propia."
+#| fig-width: 6
+#| fig-height: 2.6
+#| out-width: "82%"
+
+grafico.scope2.dumbbell
+```
+
+```{r}
+#| label: tbl-brecha
+#| tbl-cap: "Balance neto de emisiones de Alcance 2 y proporción mitigada en papel (MtCO₂e). Fuente: Elaboración propia."
+
+knitr::kable(
+  tabla.brecha.obj2,
+  digits = 2,
+  col.names = c("Empresa", "Año", "Red Física (Mt)", "Mercado (Mt)", "Brecha (Mt)", "% Mitigado"),
+  align = c("l", "c", "c", "c", "c", "c")
+)
+```
+
+Los certificados de energía renovable generan una reducción sustancial principalmente a nivel contable. Meta neutraliza el 100% de sus emisiones de Alcance 2 en el papel (reportando $0.00\text{ Mt}$), pese a demandar físicamente $5.86\text{ MtCO}_2\text{e}$ a las redes convencionales. En Google y Microsoft, aunque descuentan volúmenes gigantescos mediante contratos verdes ($12.33\text{ MtCO}_2\text{e}$ y $9.32\text{ MtCO}_2\text{e}$, respectivamente), la acelerada expansión de su infraestructura física es tan grande que estos acuerdos no logran cubrirla por completo, dejándoles emisiones residuales en mercado de $2.82\text{ MtCO}_2\text{e}$ y $2.71\text{ MtCO}_2\text{e}$.
+
+\
+
+## Dominancia del Alcance 3 e intensidad de carbono
+
+Finalmente, al consolidar la huella neta total y relacionarla con la energía demandada, se analiza si el crecimiento tecnológico ha logrado avanzar sin aumentar las emisiones globales (@tbl-scope3).
+
+```{r}
+#| label: tbl-scope3
+#| tbl-cap: "Participación del Alcance 3 en la huella total y evolución de la intensidad de carbono (MtCO₂e/TWh), 2020–2025. Fuente: Elaboración propia."
+
+knitr::kable(
+  tabla.resumen.obj3,
+  digits = 2,
+  col.names = c("Empresa", "Scope 3 Final (Mt)", "Peso Scope 3 (%)", "Int. 2020", "Int. Final", "Var. Int. (%)"),
+  align = c("l", "c", "c", "c", "c", "c")
+)
+```
+
+Según los últimos datos auditados, la mayor parte de la contaminación de estas empresas proviene de de proveedores y fabricación, y no de sus oficinas: la contaminación representó el 84.6% del impacto total de Google ($15.95\text{ MtCO}_2\text{e}$), el 86.4% en Microsoft ($18.24\text{ MtCO}_2\text{e}$) y el 99.4% en Meta ($8.15\text{ MtCO}_2\text{e}$).Esto demuestra que el impacto principal viene de fabricar componentes electrónicos y construir centros de datos. Si bien las tres compañías se volvieron más limpias en su consumo energético entre 2020 y el cierre del estudio (Microsoft bajó un 52.9%, Meta un 37.8% y Google un 29.2%) este crecimiento acelerado que mantienen en los últimos años no logra contrarrestar el aumento de su huella ambiental total.
+
+{{< pagebreak >}}
+
+# Bibliografia {.unnumbered}
+
+Alphabet Inc. (2025). *Environmental Report 2025: Sustainability at Google*. https://sustainability.google/intl/es-419/google-2025-environmental-report/
+
+Alphabet Inc. (2026). *Environmental Report 2026: 2025 Environmental Data Sheet*. https://sustainability.google/google-2026-environmental-report/
+
+Instituto Costarricense de Electricidad [ICE]. (2026). *Informe de atención de demanda y producción de electricidad con fuentes renovables, Costa Rica 2025* (Informe Técnico R01-PDOCSE-07). División de Operación y Control del Sistema Eléctrico (DOCSE) / Centro Nacional de Control de Energía (CENCE). https://apps.grupoice.com/CenceWeb/CenceDescargaArchivos.jsf?init=true&categoria=3&codigoTipoArchivo=3008
+
+Meta Platforms, Inc. (2025). *2025 Sustainability Report: Net Zero & Data Center Environmental Performance*. https://sustainability.atmeta.com/sustainability-report/
+
+Microsoft Corporation. (2026). *2026 Environmental Sustainability Report & Data Fact Sheet*. https://www.microsoft.com/en-us/corporate-responsibility/sustainability/report
+
+World Resources Institute & World Business Council for Sustainable Development. (2015). *GHG Protocol Scope 2 Guidance: An amendment to the GHG Protocol Corporate Standard*. https://ghgprotocol.org/scope-2-guidance
+
+{{< pagebreak >}}
+
+# Anexos {.unnumbered}
+
+## Anexo A. Serie histórica consolidada (2020–2025) {.unnumbered}
+
+La @tbl-anexo-base presenta el conjunto de datos estandarizado (`base_tidy.csv`) utilizado para el cálculo de indicadores y visualizaciones del reporte.
+
+```{r}
+#| label: tbl-anexo-base
+#| tbl-cap: "Base de datos ambiental consolidada de Google, Meta y Microsoft (2020–2025). Fuente: Elaboración propia con datos de Alphabet (2026), Meta Platforms (2025) y Microsoft Corporation (2026)."
+
+datos.tidy |>
+  dplyr::select(
+    company, year, electricity_twh, water_million_m3,
+    scope1_mt, scope2_location_mt, scope2_market_mt, scope3_mt
+  ) |>
+  knitr::kable(
+    digits = 2,
+    col.names = c("Empresa", "Año", "Elec. (TWh)", "Agua (M m³)", "Scope 1", "Scope 2 Loc.", "Scope 2 Mkt.", "Scope 3"),
+    align = c("l", "c", "c", "c", "c", "c", "c", "c")
+  )
+```
+
+## Anexo B. Contraste de escala eléctrica frente a Costa Rica {.unnumbered}
+
+Para dimensionar la magnitud física de la demanda energética de los centros de datos analizados, la @tbl-anexo-cr contrasta el consumo eléctrico anual de Google, Microsoft y Meta frente a la demanda eléctrica nacional acumulada del Sistema Eléctrico Nacional (SEN) de Costa Rica en 2025 ($13.00\text{ TWh}$, equivalente a $12\,995\,443.5\text{ MWh}$).
+
+```{r}
+#| label: tbl-anexo-cr
+#| tbl-cap: "Comparación del consumo eléctrico corporativo frente a la demanda nacional del Sistema Eléctrico Nacional (SEN) de Costa Rica en 2025. Fuente: Elaboración propia con datos de Alphabet (2026), Microsoft Corporation (2026), Meta Platforms (2025) y DOCSE-ICE (2026)."
+
+tabla.cr <- data.frame(
+  Entidad = c("Google (2025)", "Microsoft (2025)", "Meta (2024)", "Costa Rica - SEN (2025)"),
+  Consumo_TWh = c(44.05, 37.03, 18.42, 13.00),
+  Equivalencia_CR = c("3.39 ×", "2.85 ×", "1.42 ×", "1.00 × (Base)")
+)
+
+knitr::kable(
+  tabla.cr,
+  digits = 2,
+  col.names = c("Entidad / Año", "Consumo Eléctrico (TWh)", "Equivalencia frente a Costa Rica"),
+  align = c("l", "c", "c")
+)
+```
